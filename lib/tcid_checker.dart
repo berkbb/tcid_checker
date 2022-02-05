@@ -6,39 +6,40 @@ library tcid_checker;
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:xml/xml.dart' as xml;
 
 /// * Info: Checks that Turkish ID number is correct or not.
 /// * Params: [id] is TC ID.
 /// * Returns: boolean.
-bool check(String id) {
+bool controlID(int id) {
   try {
     bool c1 = false;
     bool c2 = false;
     bool c3 = false;
-    var tcID = int.tryParse(id); // TC ID int.
-    if (id.length == 11 &&
-        id[0] != '0' &&
-        tcID != null) // If length is 11 and first number is not equal 0.
+    var idString = id.toString();
+    if (idString.length == 11 &&
+        idString[0] != '0') // If length is 11 and first number is not equal 0.
     {
       int first10Sum = 0; // First 10 digit sum.
 
       for (int i = 0; i < 10; i++) {
-        first10Sum = first10Sum + int.parse(id[i]);
+        first10Sum = first10Sum + int.parse(idString[i]);
       }
 
-      int sum1 = int.parse(id[0]) +
-          int.parse(id[2]) +
-          int.parse(id[4]) +
-          int.parse(id[6]) +
-          int.parse(
-              id[8]); // Sum of numbers at 1., 3., 5., 7. and 9. positions.
+      int sum1 = int.parse(idString[0]) +
+          int.parse(idString[2]) +
+          int.parse(idString[4]) +
+          int.parse(idString[6]) +
+          int.parse(idString[
+              8]); // Sum of numbers at 1., 3., 5., 7. and 9. positions.
 
       int multiply1 = sum1 * 7; // Multiply sum1 with 7.
 
-      int sum2 = int.parse(id[1]) +
-          int.parse(id[3]) +
-          int.parse(id[5]) +
-          int.parse(id[7]); // Sum of numbers at 2., 4., 6. and 8. positions.
+      int sum2 = int.parse(idString[1]) +
+          int.parse(idString[3]) +
+          int.parse(idString[5]) +
+          int.parse(
+              idString[7]); // Sum of numbers at 2., 4., 6. and 8. positions.
 
       int multiply2 = sum2 * 9; // Multiply sum2 with 9.
 
@@ -50,22 +51,24 @@ bool check(String id) {
       int operation3 = (sum1 * 8) % 10; // mod10 Multiply sum1 and 8.
 
       if (operation1 ==
-          int.parse(id[10])) //If operation1 is equal to 11th digit of the ID.
+          int.parse(
+              idString[10])) //If operation1 is equal to 11th digit of the ID.
 
       {
         c1 = true;
       }
 
       if (operation2 ==
-          int.parse(id[9])) //If operation2  is equal to 10th digit of the ID.
+          int.parse(
+              idString[9])) //If operation2  is equal to 10th digit of the ID.
 
       {
         c2 = true;
       }
 
       if (operation3 ==
-          int.parse(
-              id[10])) //If operation3 mod 10 is equal to 11th digit of the ID.
+          int.parse(idString[
+              10])) //If operation3 mod 10 is equal to 11th digit of the ID.
 
       {
         c3 = true;
@@ -74,7 +77,7 @@ bool check(String id) {
 
     bool isValid = c1 & c2 & c3;
 
-    print('TC ID: $id is ${isValid == true ? 'cırrent' : 'not correct'}.');
+    print('TC ID: $id is ${isValid == true ? 'correct' : 'wrong'}.');
     return isValid;
   } catch (e) {
     print('An error occurred while checking Turkish ID - $e');
@@ -83,16 +86,16 @@ bool check(String id) {
 }
 
 /// * Info: Validate that Turkish ID number with given credentials from Web API.
-/// * Params: [id] is TC ID, [name] is user name, [surname] is user surname, [birthYear] is userbirth year.
+/// * Params: [id] is TC ID, [name] is user name, [surname] is user surname, [birthYear] is user birth year.
 /// * Returns: boolean.
-Future<bool> validate(
-    String id, String name, String surname, String birthYear) async {
+Future<bool> validateID(
+    int id, String name, String surname, int birthYear) async {
   try {
     bool result = false;
 
-    if (check(id) == true) {
+    if (controlID(id) == true) {
       var soap12Envelope =
-          '<soap12:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://www.w3.org/2003/05/soap-envelope">\n<soap12:Body>\n<TCKimlikNoDogrula xmlns="http://tckimlik.nvi.gov.tr/WS">\n<TCKimlikNo>$id</TCKimlikNo>\n<Ad>"${name.toLowerCase()}"</Ad>\n<Soyad>${surname.toLowerCase()}</Soyad>\n<DogumYili>$birthYear</DogumYili>\n</TCKimlikNoDogrula>\n</soap12:Body>\n</soap12:Envelope>';
+          '<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:ws="http://tckimlik.nvi.gov.tr/WS">\n<soap:Header/>\n<soap:Body>\n<ws:TCKimlikNoDogrula>\n<ws:TCKimlikNo>$id</ws:TCKimlikNo>\n<ws:Ad>${name.toLowerCase()}</ws:Ad>\n<ws:Soyad>${surname.toLowerCase()}</ws:Soyad>\n<ws:DogumYili>$birthYear</ws:DogumYili>\n</ws:TCKimlikNoDogrula>\n</soap:Body>\n</soap:Envelope>';
 
       http.Response response = await http.post(
           Uri(
@@ -101,27 +104,144 @@ Future<bool> validate(
               path: "Service/KPSPublic.asmx"),
           headers: {
             "Content-Type": "application/soap+xml; charset=utf-8",
-            "Content-Length": "length"
           },
           body: utf8.encode(soap12Envelope),
           encoding: Encoding.getByName("UTF-8"));
 
-      print("Response status: ${response.statusCode}");
-      print("Response body: ${response.body}");
+      // print("Response status: ${response.statusCode}");
+      // print("Response body: ${response.body}");
 
       if (response.statusCode == 200) // OK
       {
-        result = true;
+        //string to XML document
+        final doc = xml.XmlDocument.parse(response.body)
+            .findAllElements('TCKimlikNoDogrulaResult')
+            .first;
+
+        result = doc.innerText.parseBool();
       }
-      print(
-          'TC ID: $id ${result == true ? 'is validated' : 'cannot validated'} via Web API.');
-    } else {
-      print('TC ID: $id cannot validated via Web API.');
     }
+    print(
+        'Person --> ID: $id, Name: ${name.toLowerCase()}, Surname: ${surname.toLowerCase()}, Birth Year: $birthYear validation result via Web API = $result');
 
     return result;
   } catch (e) {
     print('An error occurred while validating Turkish ID - $e');
     return false;
+  }
+}
+
+/// * Info: Validates Person and ID Card with given credentials from Web API.
+/// * Params: [id] is TC ID, [name] is user name, [surname] is user surname, [noSurname] is person have surname or not, [birthDay] is user birth day, [noBirthDay] is person have birth day or not, [birthMonth] is user birth month, [noBirthMonth] is person have birth month or not, [oldWalletSerial] is pold wallet serial code, [oldWalletNo] is old wallet number, [newidCardSerial] is new TC Id Card serial number.
+/// * Returns: boolean.
+Future<bool> validatePersonAndCard(
+    int id,
+    String name,
+    String surname,
+    bool noSurname,
+    int birthDay,
+    bool noBirthDay,
+    int birthMonth,
+    bool noBirthMonth,
+    int birthYear,
+    String oldWalletSerial,
+    int oldWalletNo,
+    String newidCardSerial) async {
+  try {
+    bool result = false;
+
+    if (controlID(id) == true) {
+      var soap12Envelope =
+          '<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:ws="http://tckimlik.nvi.gov.tr/WS">\n<soap:Header/>\n<soap:Body>\n<ws:KisiVeCuzdanDogrula>\n<ws:TCKimlikNo>$id</ws:TCKimlikNo>\n<ws:Ad>${name.toLowerCase()}</ws:Ad>\n<ws:Soyad>${surname.toLowerCase()}</ws:Soyad>\n<ws:SoyadYok>$noSurname</ws:SoyadYok>\n<ws:DogumGun>$birthDay</ws:DogumGun>\n<ws:DogumGunYok>$noBirthDay</ws:DogumGunYok>\n<ws:DogumAy>$birthMonth</ws:DogumAy>\n<ws:DogumAyYok>$noBirthMonth</ws:DogumAyYok>\n<ws:DogumYil>$birthYear</ws:DogumYil>\n<ws:CuzdanSeri>${oldWalletSerial.toLowerCase()}</ws:CuzdanSeri>\n<ws:CuzdanNo>$oldWalletNo</ws:CuzdanNo>\n<ws:TCKKSeriNo>${newidCardSerial.toLowerCase()}</ws:TCKKSeriNo>\n</ws:KisiVeCuzdanDogrula>\n</soap:Body>\n</soap:Envelope>';
+
+      http.Response response = await http.post(
+          Uri(
+              scheme: "https",
+              host: "tckimlik.nvi.gov.tr",
+              path: "Service/KPSPublicV2.asmx"),
+          headers: {
+            "Content-Type": "application/soap+xml; charset=utf-8",
+          },
+          body: utf8.encode(soap12Envelope),
+          encoding: Encoding.getByName("UTF-8"));
+
+      // print("Response status: ${response.statusCode}");
+      // print("Response body: ${response.body}");
+
+      if (response.statusCode == 200) // OK
+      {
+        //string to XML document
+        final doc = xml.XmlDocument.parse(response.body)
+            .findAllElements('KisiVeCuzdanDogrulaResult')
+            .first;
+
+        result = doc.innerText.parseBool();
+      }
+    }
+    print(
+        'Person and Card --> ID: $id, Name: ${name.toLowerCase()}, Surname: ${surname.toLowerCase()}, Birth Year: $birthYear, Birth Month: $birthMonth, Birth Day: $birthDay,  Old Wallet No: $oldWalletNo,  Old Wallet Serial: ${oldWalletSerial.toLowerCase()},  New ID Card Serial: ${newidCardSerial.toLowerCase()} validation result via Web API = $result');
+
+    return result;
+  } catch (e) {
+    print('An error occurred while validating Person and Card - $e');
+    return false;
+  }
+}
+
+/// * Info: Validate that Foreign ID number given by Turkish authorities with given credentials from Web API.
+/// * Params: [id] is TC ID, [name] is user name, [surname] is user surname, [birthYear] is user birth year, [birthMonth] is user birth month, [birthDay] is user birth day.
+/// * Returns: boolean.
+Future<bool> validateForeignID(int id, String name, String surname,
+    int birthYear, int birthMonth, int birthDay) async {
+  try {
+    bool result = false;
+
+    if (controlID(id) == true) {
+      var soap12Envelope =
+          '<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:ws="http://tckimlik.nvi.gov.tr/WS">\n<soap:Header/>\n<soap:Body>\n<ws:YabanciKimlikNoDogrula>\n<ws:KimlikNo>$id</ws:KimlikNo>\n<ws:Ad>${name.toLowerCase()}</ws:Ad>\n<ws:Soyad>${surname.toLowerCase()}</ws:Soyad>\n<ws:DogumGun>$birthDay</ws:DogumGun>\n<ws:DogumAy>$birthMonth</ws:DogumAy>\n<ws:DogumYil>$birthYear</ws:DogumYil>\n</ws:YabanciKimlikNoDogrula>\n</soap:Body>\n</soap:Envelope>';
+
+      http.Response response = await http.post(
+          Uri(
+              scheme: "https",
+              host: "tckimlik.nvi.gov.tr",
+              path: "Service/KPSPublicYabanciDogrula.asmx"),
+          headers: {
+            "Content-Type": "application/soap+xml; charset=utf-8",
+          },
+          body: utf8.encode(soap12Envelope),
+          encoding: Encoding.getByName("UTF-8"));
+
+      // print("Response status: ${response.statusCode}");
+      // print("Response body: ${response.body}");
+
+      if (response.statusCode == 200) // OK
+      {
+        //string to XML document
+        final doc = xml.XmlDocument.parse(response.body)
+            .findAllElements('YabanciKimlikNoDogrulaResult')
+            .first;
+
+        result = doc.innerText.parseBool();
+      }
+    }
+    print(
+        'Foreign Person --> ID: $id, Name: ${name.toLowerCase()}, Surname: ${surname.toLowerCase()}, Birth Year: $birthYear validation result via Web API = $result');
+
+    return result;
+  } catch (e) {
+    print('An error occurred while validating Foreign ID - $e');
+    return false;
+  }
+}
+
+extension BoolParsing on String {
+  bool parseBool() {
+    if (toLowerCase() == 'true') {
+      return true;
+    } else if (toLowerCase() == 'false') {
+      return false;
+    }
+
+    throw '"$this" can not be parsed to boolean.';
   }
 }

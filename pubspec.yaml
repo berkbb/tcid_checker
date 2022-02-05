@@ -1,7 +1,6 @@
 name: tcid_checker
-description: Determines that given TC Id is valid or not based on rules --> * The ones digit of the sum of the first 10 digits gives the 11th digit.
- * The ones digit of 7 times the sum of the 1st, 3rd, 5th, 7th and 9th digits plus 9 times the sum of the 2nd, 4th, 6th and 8th digits gives the 10th digit. * The ones digit of 8 times the sum of the 1st, 3rd, 5th, 7th and 9th digits gives the 11th digit. 
-version: 1.0.2
+description: Determines that given TC ID is correct or wrong based on rules. If correct, you can use online validation functions.
+version: 2.0.0
 repository: https://github.com/berkbb/tcid_checker
 
 environment:
@@ -9,6 +8,7 @@ environment:
 
 dependencies:
    http: ^0.13.4
+   xml: ^5.3.1
 #   path: ^1.8.0
 
 dev_dependencies:
