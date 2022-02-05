@@ -1,5 +1,7 @@
 import 'package:tcid_checker/tcid_checker.dart';
 
-main(List<String> args) {
-  print('TC ID is ${checkID("11111111111") == true ? 'valid' : 'not valid'}.');
+void main(List<String> args) async {
+  check("11111111111");
+
+  await validate("11111111111", "ali", "veli", "1991");
 }
