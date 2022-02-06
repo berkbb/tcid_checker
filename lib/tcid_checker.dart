@@ -11,6 +11,7 @@ import 'package:xml/xml.dart' as xml;
 /// * Info: Checks that Turkish ID number is correct or not.
 /// * Params: [id] is TC ID.
 /// * Returns: boolean.
+/// * Notes:
 bool controlID(int id) {
   try {
     bool c1 = false;
@@ -88,6 +89,7 @@ bool controlID(int id) {
 /// * Info: Validate that Turkish ID number with given credentials from Web API.
 /// * Params: [id] is TC ID, [name] is user name, [surname] is user surname, [birthYear] is user birth year.
 /// * Returns: boolean.
+/// * Notes:
 Future<bool> validateID(
     int id, String name, String surname, int birthYear) async {
   try {
@@ -134,7 +136,7 @@ Future<bool> validateID(
 /// * Info: Validates Person and ID Card with given credentials from Web API.
 /// * Params: [id] is TC ID, [name] is user name, [surname] is user surname, [noSurname] is person have surname or not, [birthDay] is user birth day, [noBirthDay] is person have birth day or not, [birthMonth] is user birth month, [noBirthMonth] is person have birth month or not, [oldWalletSerial] is pold wallet serial code, [oldWalletNo] is old wallet number, [newidCardSerial] is new TC Id Card serial number.
 /// * Returns: boolean.
-/// * Warning: Returns always 'false' due to response from Web API. Service may have been stopped from authorities after Turkish people info leak.
+/// * Notes: Returns always 'false' due to response from Web API. Service may have been stopped from authorities after Turkish people info leak.
 Future<bool> validatePersonAndCard(
     int id,
     String name,
@@ -192,6 +194,8 @@ Future<bool> validatePersonAndCard(
 /// * Info: Validate that Foreign ID number given by Turkish authorities with given credentials from Web API.
 /// * Params: [id] is TC ID, [name] is user name, [surname] is user surname, [birthYear] is user birth year, [birthMonth] is user birth month, [birthDay] is user birth day.
 /// * Returns: boolean.
+/// * Notes:
+
 Future<bool> validateForeignID(int id, String name, String surname,
     int birthYear, int birthMonth, int birthDay) async {
   try {
