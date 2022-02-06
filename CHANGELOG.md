@@ -1,3 +1,7 @@
+## [2.0.1] - 2022-02-06
+
+* Updated functions.
+
 ## [2.0.0] - 2022-02-05
 
 * Renamed function names.

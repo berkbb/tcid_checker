@@ -134,6 +134,7 @@ Future<bool> validateID(
 /// * Info: Validates Person and ID Card with given credentials from Web API.
 /// * Params: [id] is TC ID, [name] is user name, [surname] is user surname, [noSurname] is person have surname or not, [birthDay] is user birth day, [noBirthDay] is person have birth day or not, [birthMonth] is user birth month, [noBirthMonth] is person have birth month or not, [oldWalletSerial] is pold wallet serial code, [oldWalletNo] is old wallet number, [newidCardSerial] is new TC Id Card serial number.
 /// * Returns: boolean.
+/// * Warning: Returns always 'false' due to response from Web API. Service may have been stopped from authorities after Turkish people info leak.
 Future<bool> validatePersonAndCard(
     int id,
     String name,
@@ -234,14 +235,19 @@ Future<bool> validateForeignID(int id, String name, String surname,
   }
 }
 
+/// String bool extension.
 extension BoolParsing on String {
+  /// Parse String to bool.
   bool parseBool() {
-    if (toLowerCase() == 'true') {
-      return true;
-    } else if (toLowerCase() == 'false') {
+    try {
+      if (toLowerCase() == "true" || toLowerCase() == "false") {
+        return (toLowerCase() == "true" ? true : false);
+      } else {
+        throw ("$this can not be parsed to boolean.");
+      }
+    } catch (e) {
+      print("$this can not be parsed to boolean.");
       return false;
     }
-
-    throw '"$this" can not be parsed to boolean.';
   }
 }
