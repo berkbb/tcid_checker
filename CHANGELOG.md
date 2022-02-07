@@ -1,3 +1,9 @@
+## [2.0.2] - 2022-02-07
+
+* Generates valid random TC ID function.
+* Disable / enable skip real citizen TC ID possibility (Fake TC ID will start with "0").
+* Disable / enable console log for "checkID()".
+
 ## [2.0.1] - 2022-02-06
 
 * Updated functions.
