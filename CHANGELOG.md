@@ -1,3 +1,7 @@
+## [2.0.3] - 2022-02-07
+
+* "controlID()" parameter correction.
+
 ## [2.0.2] - 2022-02-07
 
 * Generates valid random TC ID function.

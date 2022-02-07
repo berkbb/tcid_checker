@@ -2,10 +2,10 @@ import 'package:tcid_checker/tcid_checker.dart';
 
 void main(List<String> args) async {
   // bool r1 =
-  controlID("08392566548", true, false); // Control ID. -- true
+  controlID("08392566548", true, true); // Control ID. -- true
 
   // bool r6 =
-  controlID("02345678982", false, false); // Control ID. -- false
+  controlID("02345678982", false, true); // Control ID. -- false
 
   // String? r2 =
   generateID(false, false)!; // Generates valid random TC ID. -- random int.
