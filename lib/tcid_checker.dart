@@ -18,7 +18,7 @@ bool controlID(String id, bool skipRealCitizen, bool printLog) {
     bool c2 = false;
     bool c3 = false;
 
-    if (id.length == 1 && int.tryParse(id) != null && skipRealCitizen == true
+    if (id.length == 11 && skipRealCitizen == true
         ? true
         : id[0] != '0') // If length is 11 and first number is not equal 0.
     {
