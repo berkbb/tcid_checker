@@ -1,14 +1,14 @@
 name: tcid_checker
 description: Determines that given TC ID is correct or wrong based on rules. If correct, you can use online validation functions.
-version: 2.0.3
+version: 2.0.4
 repository: https://github.com/berkbb/tcid_checker
 
 environment:
-  sdk: '>=2.14.2 <3.0.0'
+  sdk: ">=2.14.2 <3.0.0"
 
 dependencies:
-   http: ^0.13.4
-   xml: ^5.3.1
+  http: ^0.13.4
+  xml: ^5.3.1
 #   path: ^1.8.0
 
 dev_dependencies:

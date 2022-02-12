@@ -1,3 +1,7 @@
+## [2.0.4] - 2022-02-12
+
+* "validateForeignID()" fixed.
+
 ## [2.0.3] - 2022-02-07
 
 * "controlID()" parameter correction.
