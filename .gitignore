@@ -1,2 +1,6 @@
 
 .DS_Store
+.dart_tool/pub/bin/test/test.dart-2.16.1.snapshot
+.dart_tool/pub/incremental/test/test.dart.incremental.dill
+.dart_tool/test/incremental_kernel.Ly9AZGFydD0yLjE0
+
