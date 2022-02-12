@@ -241,7 +241,7 @@ Future<bool> validateID(String id, String name, String surname, int birthYear,
 }
 
 /// * Info: Validates Person and ID Card with given credentials from Web API.
-/// * Params: [id] is TC ID, [name] is user name, [surname] is user surname, [noSurname] is person have surname or not, [birthDay] is user birth day, [noBirthDay] is person have birth day or not, [birthMonth] is user birth month, [noBirthMonth] is person have birth month or not, [oldWalletSerial] is pold wallet serial code, [oldWalletNo] is old wallet number, [newidCardSerial] is new TC Id Card serial number, [skipRealCitizen] is a key that controls not to create a real citizen ID. If it is true, ID will start 0, it is not correct on real life.
+/// * Params: [id] is TC ID, [name] is user name, [surname] is user surname, [noSurname] is person have surname or not, [birthDay] is user birth day, [noBirthDay] is person have birth day or not, [birthMonth] is user birth month, [noBirthMonth] is person have birth month or not, [birthYear] is user birth year, [oldWalletSerial] is old wallet serial code, [oldWalletNo] is old wallet number, [newidCardSerial] is new TC Id Card serial number, [skipRealCitizen] is a key that controls not to create a real citizen ID. If it is true, ID will start 0, it is not correct on real life.
 /// * Returns: boolean.
 /// * Notes: Returns always 'false' due to response from Web API. Service may have been stopped from authorities after Turkish people info leak.
 Future<bool> validatePersonAndCard(
