@@ -1,3 +1,7 @@
+## [2.0.5] - 2022-02-13
+
+* README.md updated.
+
 ## [2.0.4] - 2022-02-12
 
 * "validateForeignID()" fixed.
