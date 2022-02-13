@@ -1,3 +1,6 @@
+[![pub.dev Downloads](https://img.shields.io/pub/v/tcid_checker)](https://pub.dev/packages/tcid_checker)
+[![License](https://img.shields.io/github/license/berkbb/tcid_checker?color=important)](https://pub.dev/packages/tcid_checker)
+
 
 # TC ID Checker for Dart & Flutter
 
@@ -51,9 +54,6 @@ flutter pub get
 import 'package:tcid_checker/tcid_checker.dart';
 ```
 
-## License
-
-* This project is licensed under the MIT License.
 
 
 
