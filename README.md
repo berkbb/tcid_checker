@@ -12,7 +12,6 @@
 * If correct, you can use online validation functions.
 * Generates valid random TC ID.
 
-[pub.dev](https://pub.dev/packages/tcid_checker) 
 
 
 ## How to Work
