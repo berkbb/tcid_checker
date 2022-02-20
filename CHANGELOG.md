@@ -1,3 +1,7 @@
+## [2.0.6] - 2022-02-20
+
+* Colored log outputs added.
+
 ## [2.0.5] - 2022-02-13
 
 * README.md updated.

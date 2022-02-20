@@ -7,6 +7,7 @@ import 'dart:convert';
 import 'dart:math' as math;
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
+import 'package:logbox_color/logbox_color.dart' as logger;
 
 /// * Info: Checks that Turkish ID number is correct or not.
 /// * Params: [id] is TC ID, [skipRealCitizen] is a key that controls not to create a real citizen ID. If it is true, ID will start 0, it is not correct on real life, [notPrint] enables / dsiables console log. If true, log will printed.
@@ -77,17 +78,19 @@ bool controlID(String id, bool skipRealCitizen, bool printLog) {
     bool isValid = c1 & c2 & c3;
 
     if (printLog == true) {
-      print('TC ID: $id is ${isValid == true ? 'correct' : 'wrong'}.');
+      logger.printLog('TC ID: $id is ${isValid == true ? 'correct' : 'wrong'}.',
+          logger.LogLevel.info);
     }
     return isValid;
   } catch (e) {
-    print('An error occurred while checking Turkish ID - $e');
+    logger.printLog('An error occurred while checking Turkish ID - $e',
+        logger.LogLevel.error);
     return false;
   }
 }
 
 ///* Info: Generates valid random TC ID.
-///* Params: [skipRealCitizen] is a key that controls not to create a real citizen ID. If it is true, ID will start 0, it is not correct on real life, [computeFake] is a key that controls compute Fake TC ID or returns a print ready value.
+///* Params: [skipRealCitizen] is a key that controls not to create a real citizen ID. If it is true, ID will start 0, it is not correct on real life, [computeFake] is a key that controls compute Fake TC ID or returns a  logger.printLog ready value.
 ///* Returns: String?.
 ///* Notes:
 String? generateID(bool skipRealCitizen, bool computeFake) {
@@ -100,8 +103,9 @@ String? generateID(bool skipRealCitizen, bool computeFake) {
     if (skipRealCitizen == true &&
         computeFake == false) // Fake ID starts with 0.
     {
-      print(
-          'Generating fake TC ID starts with "0", so it is hard to find any match. So, the process takes a little longer. Please wait.');
+      logger.printLog(
+          'Generating fake TC ID starts with "0", so it is hard to find any match. So, the process takes a little longer. Please wait.',
+          logger.LogLevel.warning);
       do {
         var tcList = [
           for (var i = 0; i < size; i++) 0
@@ -148,12 +152,14 @@ String? generateID(bool skipRealCitizen, bool computeFake) {
           controlKey = true; // Stop loop.
         }
       } while (controlKey == false);
-      print('Generated valid fake TC ID is: $generatedNum');
+      logger.printLog(
+          'Generated valid fake TC ID is: $generatedNum', logger.LogLevel.info);
     } else if ((skipRealCitizen == false && computeFake == true) ||
         (skipRealCitizen == true && computeFake == true)) // Print Ready Fake ID
     {
       generatedNum = "02345678982";
-      print('Print ready valid fake TC ID is: $generatedNum');
+      logger.printLog('Print ready valid fake TC ID is: $generatedNum',
+          logger.LogLevel.info);
     } else {
       do {
         var tcList = [
@@ -183,12 +189,14 @@ String? generateID(bool skipRealCitizen, bool computeFake) {
           controlKey = true; // Stop loop.
         }
       } while (controlKey == false);
-      print('Generated valid random TC ID is: $generatedNum');
+      logger.printLog('Generated valid random TC ID is: $generatedNum',
+          logger.LogLevel.info);
     }
 
     return generatedNum;
   } catch (e) {
-    print('An error occurred while generating valid Turkish ID - $e');
+    logger.printLog('An error occurred while generating valid Turkish ID - $e',
+        logger.LogLevel.error);
     return null;
   }
 }
@@ -205,7 +213,7 @@ Future<bool> validateID(String id, String name, String surname, int birthYear,
     if (controlID(id, skipRealCitizen, false) == true) {
       var soap12Envelope =
           '<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:ws="http://tckimlik.nvi.gov.tr/WS">\n<soap:Header/>\n<soap:Body>\n<ws:TCKimlikNoDogrula>\n<ws:TCKimlikNo>$id</ws:TCKimlikNo>\n<ws:Ad>${name.toLowerCase()}</ws:Ad>\n<ws:Soyad>${surname.toLowerCase()}</ws:Soyad>\n<ws:DogumYili>$birthYear</ws:DogumYili>\n</ws:TCKimlikNoDogrula>\n</soap:Body>\n</soap:Envelope>';
-
+      //logger.printLog(soap12Envelope, logger.LogLevel.debug);
       http.Response response = await http.post(
           Uri(
               scheme: "https",
@@ -217,8 +225,8 @@ Future<bool> validateID(String id, String name, String surname, int birthYear,
           body: utf8.encode(soap12Envelope),
           encoding: Encoding.getByName("UTF-8"));
 
-      // print("Response status: ${response.statusCode}");
-      // print("Response body: ${response.body}");
+      //  logger.printLog("Response status: ${response.statusCode}");
+      //  logger.printLog("Response body: ${response.body}");
 
       if (response.statusCode == 200) // OK
       {
@@ -230,12 +238,14 @@ Future<bool> validateID(String id, String name, String surname, int birthYear,
         result = doc.innerText.parseBool();
       }
     }
-    print(
-        'Person --> ID: $id, Name: ${name.toLowerCase()}, Surname: ${surname.toLowerCase()}, Birth Year: $birthYear validation result via Web API = $result');
+    logger.printLog(
+        'Person --> ID: $id, Name: ${name.toLowerCase()}, Surname: ${surname.toLowerCase()}, Birth Year: $birthYear validation result via Web API = $result',
+        logger.LogLevel.info);
 
     return result;
   } catch (e) {
-    print('An error occurred while validating Turkish ID - $e');
+    logger.printLog('An error occurred while validating Turkish ID - $e',
+        logger.LogLevel.error);
     return false;
   }
 }
@@ -264,7 +274,7 @@ Future<bool> validatePersonAndCard(
     if (controlID(id, skipRealCitizen, false) == true) {
       var soap12Envelope =
           '<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:ws="http://tckimlik.nvi.gov.tr/WS">\n<soap:Header/>\n<soap:Body>\n<ws:KisiVeCuzdanDogrula>\n<ws:TCKimlikNo>$id</ws:TCKimlikNo>\n<ws:Ad>${name.toLowerCase()}</ws:Ad>\n<ws:Soyad>${surname.toLowerCase()}</ws:Soyad>\n<ws:SoyadYok>$noSurname</ws:SoyadYok>\n<ws:DogumGun>$birthDay</ws:DogumGun>\n<ws:DogumGunYok>$noBirthDay</ws:DogumGunYok>\n<ws:DogumAy>$birthMonth</ws:DogumAy>\n<ws:DogumAyYok>$noBirthMonth</ws:DogumAyYok>\n<ws:DogumYil>$birthYear</ws:DogumYil>\n<ws:CuzdanSeri>${oldWalletSerial.toLowerCase()}</ws:CuzdanSeri>\n<ws:CuzdanNo>$oldWalletNo</ws:CuzdanNo>\n<ws:TCKKSeriNo>${newidCardSerial.toLowerCase()}</ws:TCKKSeriNo>\n</ws:KisiVeCuzdanDogrula>\n</soap:Body>\n</soap:Envelope>';
-      print(soap12Envelope);
+      //logger.printLog(soap12Envelope, logger.LogLevel.debug);
       http.Response response = await http.post(
           Uri(
               scheme: "https",
@@ -276,8 +286,8 @@ Future<bool> validatePersonAndCard(
           body: utf8.encode(soap12Envelope),
           encoding: Encoding.getByName("UTF-8"));
 
-      // print("Response status: ${response.statusCode}");
-      // print("Response body: ${response.body}");
+      //  logger.printLog("Response status: ${response.statusCode}");
+      //  logger.printLog("Response body: ${response.body}");
 
       if (response.statusCode == 200) // OK
       {
@@ -289,12 +299,14 @@ Future<bool> validatePersonAndCard(
         result = doc.innerText.parseBool();
       }
     }
-    print(
-        'Person and Card --> ID: $id, Name: ${name.toLowerCase()}, Surname: ${surname.toLowerCase()}, Birth Year: $birthYear, Birth Month: $birthMonth, Birth Day: $birthDay,  Old Wallet No: $oldWalletNo,  Old Wallet Serial: ${oldWalletSerial.toLowerCase()},  New ID Card Serial: ${newidCardSerial.toLowerCase()} validation result via Web API = $result');
+    logger.printLog(
+        'Person and Card --> ID: $id, Name: ${name.toLowerCase()}, Surname: ${surname.toLowerCase()}, Birth Year: $birthYear, Birth Month: $birthMonth, Birth Day: $birthDay,  Old Wallet No: $oldWalletNo,  Old Wallet Serial: ${oldWalletSerial.toLowerCase()},  New ID Card Serial: ${newidCardSerial.toLowerCase()} validation result via Web API = $result',
+        logger.LogLevel.info);
 
     return result;
   } catch (e) {
-    print('An error occurred while validating Person and Card - $e');
+    logger.printLog('An error occurred while validating Person and Card - $e',
+        logger.LogLevel.error);
     return false;
   }
 }
@@ -312,7 +324,7 @@ Future<bool> validateForeignID(String id, String name, String surname,
     if (controlID(id, skipRealCitizen, false) == true) {
       var soap12Envelope =
           '<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:ws="http://tckimlik.nvi.gov.tr/WS">\n<soap:Header/>\n<soap:Body>\n<ws:YabanciKimlikNoDogrula>\n<ws:KimlikNo>$id</ws:KimlikNo>\n<ws:Ad>${name.toLowerCase()}</ws:Ad>\n<ws:Soyad>${surname.toLowerCase()}</ws:Soyad>\n<ws:DogumGun>$birthDay</ws:DogumGun>\n<ws:DogumAy>$birthMonth</ws:DogumAy>\n<ws:DogumYil>$birthYear</ws:DogumYil>\n</ws:YabanciKimlikNoDogrula>\n</soap:Body>\n</soap:Envelope>';
-
+      //logger.printLog(soap12Envelope, logger.LogLevel.debug);
       http.Response response = await http.post(
           Uri(
               scheme: "https",
@@ -324,8 +336,8 @@ Future<bool> validateForeignID(String id, String name, String surname,
           body: utf8.encode(soap12Envelope),
           encoding: Encoding.getByName("UTF-8"));
 
-      // print("Response status: ${response.statusCode}");
-      // print("Response body: ${response.body}");
+      //  logger.printLog("Response status: ${response.statusCode}");
+      //  logger.printLog("Response body: ${response.body}");
 
       if (response.statusCode == 200) // OK
       {
@@ -337,12 +349,14 @@ Future<bool> validateForeignID(String id, String name, String surname,
         result = doc.innerText.parseBool();
       }
     }
-    print(
-        'Foreign Person --> ID: $id, Name: ${name.toLowerCase()}, Surname: ${surname.toLowerCase()}, Birth Year: $birthYear validation result via Web API = $result');
+    logger.printLog(
+        'Foreign Person --> ID: $id, Name: ${name.toLowerCase()}, Surname: ${surname.toLowerCase()}, Birth Year: $birthYear validation result via Web API = $result',
+        logger.LogLevel.info);
 
     return result;
   } catch (e) {
-    print('An error occurred while validating Foreign ID - $e');
+    logger.printLog('An error occurred while validating Foreign ID - $e',
+        logger.LogLevel.error);
     return false;
   }
 }
@@ -358,7 +372,8 @@ extension BoolParsing on String {
         throw ("$this can not be parsed to boolean.");
       }
     } catch (e) {
-      print("$this can not be parsed to boolean.");
+      logger.printLog(
+          "$this can not be parsed to boolean.", logger.LogLevel.error);
       return false;
     }
   }
