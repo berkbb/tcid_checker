@@ -129,7 +129,7 @@
     },
     {
       "name": "logbox_color",
-      "rootUri": "file:///Users/berkbabadogan/.pub-cache/hosted/pub.dartlang.org/logbox_color-1.0.4",
+      "rootUri": "file:///Users/berkbabadogan/.pub-cache/hosted/pub.dartlang.org/logbox_color-1.0.5",
       "packageUri": "lib/",
       "languageVersion": "2.16"
     },
@@ -326,7 +326,7 @@
       "languageVersion": "2.16"
     }
   ],
-  "generated": "2022-02-20T13:01:28.693105Z",
+  "generated": "2022-02-21T09:15:10.729988Z",
   "generator": "pub",
   "generatorVersion": "2.16.1"
 }

@@ -1,3 +1,7 @@
+## [2.0.8] - 2022-02-21
+
+* Colored log outputs package upgraded.
+
 ## [2.0.7] - 2022-02-20
 
 * Colored log outputs updated.
