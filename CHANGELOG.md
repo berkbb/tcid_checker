@@ -1,3 +1,7 @@
+## [2.0.9] - 2022-05-13
+
+* Dependency update.
+
 ## [2.0.8] - 2022-02-21
 
 * Colored log outputs package upgraded.

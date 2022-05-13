@@ -51,7 +51,7 @@
     },
     {
       "name": "collection",
-      "rootUri": "file:///Users/berkbabadogan/.pub-cache/hosted/pub.dartlang.org/collection-1.15.0",
+      "rootUri": "file:///Users/berkbabadogan/.pub-cache/hosted/pub.dartlang.org/collection-1.16.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -129,7 +129,7 @@
     },
     {
       "name": "logbox_color",
-      "rootUri": "file:///Users/berkbabadogan/.pub-cache/hosted/pub.dartlang.org/logbox_color-1.0.5",
+      "rootUri": "file:///Users/berkbabadogan/.pub-cache/hosted/pub.dartlang.org/logbox_color-1.0.6",
       "packageUri": "lib/",
       "languageVersion": "2.16"
     },
@@ -177,9 +177,9 @@
     },
     {
       "name": "petitparser",
-      "rootUri": "file:///Users/berkbabadogan/.pub-cache/hosted/pub.dartlang.org/petitparser-4.4.0",
+      "rootUri": "file:///Users/berkbabadogan/.pub-cache/hosted/pub.dartlang.org/petitparser-5.0.0",
       "packageUri": "lib/",
-      "languageVersion": "2.14"
+      "languageVersion": "2.16"
     },
     {
       "name": "pool",
@@ -309,9 +309,9 @@
     },
     {
       "name": "xml",
-      "rootUri": "file:///Users/berkbabadogan/.pub-cache/hosted/pub.dartlang.org/xml-5.3.1",
+      "rootUri": "file:///Users/berkbabadogan/.pub-cache/hosted/pub.dartlang.org/xml-6.0.1",
       "packageUri": "lib/",
-      "languageVersion": "2.14"
+      "languageVersion": "2.16"
     },
     {
       "name": "yaml",
@@ -326,7 +326,7 @@
       "languageVersion": "2.16"
     }
   ],
-  "generated": "2022-02-21T09:15:10.729988Z",
+  "generated": "2022-05-13T15:26:12.726198Z",
   "generator": "pub",
-  "generatorVersion": "2.16.1"
+  "generatorVersion": "2.17.0"
 }
