@@ -1,3 +1,8 @@
+## [3.0.0] - 2026-02-13
+
+* Updated for Flutter 3.41.1 and Dart 3.11.0 compatibility.
+* Updated SDK constraints and dependencies.
+
 ## [2.0.9] - 2022-05-13
 
 * Dependency update.

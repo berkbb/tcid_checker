@@ -1,8 +1,3 @@
-/// Support for doing something awesome.
-///
-/// More dartdocs go here.
-library tcid_checker;
-
 import 'dart:convert';
 import 'dart:math' as math;
 import 'package:http/http.dart' as http;
