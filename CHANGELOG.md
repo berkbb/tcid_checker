@@ -1,3 +1,7 @@
+## [3.0.1] - 2026-09-26
+
+* Updated dependencies to latest versions (`xml: ^7.0.1`, `logbox_color: ^1.0.7`).
+
 ## [3.0.0] - 2026-02-13
 
 * Updated for Flutter 3.41.1 and Dart 3.11.0 compatibility.
