@@ -4,3 +4,4 @@
 .dart_tool/pub/incremental/test/test.dart.incremental.dill
 .dart_tool/test/incremental_kernel.Ly9AZGFydD0yLjE0
 
+*.bak
